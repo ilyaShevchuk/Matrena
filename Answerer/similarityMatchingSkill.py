@@ -1,12 +1,11 @@
-from logging import getLogger
-from typing import Tuple, Optional, List
-from deeppavlov.core.commands.infer import build_model
 from deeppavlov import build_model, train_model
 from deeppavlov.configs import configs
 from deeppavlov.core.commands.utils import expand_path
 from deeppavlov.core.common.file import read_json
 from deeppavlov.core.data.utils import update_dict_recursive
 from deeppavlov.core.skill.skill import Skill
+from logging import getLogger
+from typing import Tuple, Optional, List
 
 log = getLogger(__name__)
 
@@ -35,7 +34,7 @@ class SimilarityMatchingSkill(Skill):
     def __init__(self, data_path: Optional[str] = None, config_type: Optional[str] = 'tfidf_autofaq',
                  x_col_name: Optional[str] = 'Question', y_col_name: Optional[str] = 'Answer',
                  save_load_path: Optional[str] = './similarity_matching',
-                 edit_dict: Optional[dict] = None, train: Optional[bool] = False):
+                 edit_dict: Optional[dict] = None, train: Optional[bool] = True):
 
         if config_type not in configs.faq:
             raise ValueError("There is no config named '{0}'. Possible options are: {1}"
@@ -44,7 +43,9 @@ class SimilarityMatchingSkill(Skill):
         # Хотим изменить на твиитер - нужно менять тут
         configPath = configs.faq[config_type]
         model_config = read_json(configs.faq[config_type])
-
+        if model_config['chainer']['pipe'][5]['max_proba']:
+            model_config['chainer']['pipe'][5].pop('max_proba')
+            model_config['chainer']['pipe'][5]['confident_threshold'] = 0.01
         if x_col_name is not None:
             model_config['dataset_reader']['x_col_name'] = x_col_name
         if y_col_name is not None:
