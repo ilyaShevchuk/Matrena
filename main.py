@@ -1,16 +1,21 @@
 from DB.MakeDB import delete_DB, Base, engine, post_MFC
-from answererControl import AnswererControl
+from answererControl import AnswererControl, Button
 from recordControl import RecordControl
 
 if __name__ == '__main__':
     control = AnswererControl()
 
     # Запрос пользователя
-    # todo возващать больше одного овтета - смотри закладки гугл
+    dict1 = control.answerForQuery('снилс')
+    for answer in dict1:
+        print(answer)
+    dict1 = control.answerForQuery('Новый паспорт')
+    for answer in dict1:
+        print(answer)
     dict1 = control.answerForQuery('Получить паспорт')
     for answer in dict1:
         print(answer)
-    # Словарь содержит кнопки с ответами, дети кнопок элементы таблицы со следующей иерархией:
+    # # Словарь содержит кнопки с ответами, дети кнопок элементы таблицы со следующей иерархией:
     # Вопрос -> Способ -> Документы, Порядок действий , Ссылка
     # for key in dict1:
     #     print(key)
@@ -29,7 +34,6 @@ if __name__ == '__main__':
     ### Тест записи
 
     # Создание заглушки бд мфц
-
     # Base.metadata.create_all(bind=engine)
     # post_MFC()
 
@@ -37,7 +41,6 @@ if __name__ == '__main__':
     # newDict = recorder.getMFCsDict()
     # MFCButton = newDict.get('МФЦ Адмиралтейского района')
     # recorder.initializeFreeDates(MFCButton)
-    # for date in MFCButton.getChildrens():
-    #     print(date.display())
-    #     for time in date.getChildrens():
-    #         print(time.display())
+    # recorder.makeEntry(MFCButton=MFCButton, buttonTime=Button('12:40'), dateButton=Button("2021-09-21"),
+    #                    chatID="12", name="Ilya")
+    # print(recorder.getInfoAboutRecordByChatID("12"))
